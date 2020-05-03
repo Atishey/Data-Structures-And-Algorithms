@@ -1,44 +1,64 @@
- //Given a binary tree, a target node in the binary tree,
-//and an integer value k, print all the nodes that are at distance k from the given target node. 
-//No parent pointers are available.
-//k = 2 
-//nodeValue = 3   
-    
+/**
+ * Definition for binary tree
+ * class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) {
+ *      val = x;
+ *      left=null;
+ *      right=null;
+ *     }
+ * }
+ */
+public class Solution {
     class Pair{
-        Node node;
+        TreeNode node;
         int dist;
-        Pair(Node node,int dist){
+        Pair(TreeNode node,int dist){
             this.node = node;
             this.dist = dist;
         }
     }
     
-    HashMap<Node,Node> h;
-    printKNodes(Node root,Node parent){
+    HashMap<TreeNode,TreeNode> h;
+    TreeNode src;
+    void connectKNodes(TreeNode root,TreeNode parent,int source){
         if(root == null)
             return;
+        // System.out.println(">>>"+root.val);    
+        if(root.val == source)
+            src = root;
         h.put(root,parent);
-        printKNodes(root.left,root);
-        printKNodes(root.right,root);
+        connectKNodes(root.left,root,source);
+        connectKNodes(root.right,root,source);
     }
     
-    HashMap<Node,Integer> vis;
-    getKDistanceNodes(Node source){
+    public ArrayList<Integer> solve(TreeNode root, int source, int k) {
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        h = new HashMap<TreeNode,TreeNode>();
+        connectKNodes(root,null,source);
         Queue<Pair> q = new LinkedList<Pair>();
-        q.add(new Pair(h.get(source),0));
+        q.add(new Pair(src,0));
+        HashMap<TreeNode,Integer> vis = new HashMap<TreeNode,Integer>();
         while(!q.isEmpty()){
             Pair temp = q.poll();
             vis.put(temp.node,1);
             if(temp.dist == k){
-                System.out.println(temp.val);
+                res.add(temp.node.val);
             }
-            if(temp.left != null && !vis.containsKey(temp.left.node)) {
-                q.add(new Pair(temp.left,temp.dist+1));
+            if(temp.node.left != null && !vis.containsKey(temp.node.left)) {
+                q.add(new Pair(temp.node.left,temp.dist+1));
             }
-            if(temp.right != null && !vis.containsKey(temp.right.node))
-                q.add(new Pair(temp.right,temp.dist+1));
+            if(temp.node.right != null && !vis.containsKey(temp.node.right))
+                q.add(new Pair(temp.node.right,temp.dist+1));
             
-            if(h.get(temp) != null && !vis.containsKey(h.get(temp).node))
-                q.add(new Pair(h.get(temp),temp.dist+1));
+            if(temp.node != null && h.containsKey(temp.node) && h.get(temp.node) != null && !vis.containsKey(h.get(temp.node)))
+                q.add(new Pair(h.get(temp.node),temp.dist+1));
         }
+        
+        return res;
+        
+        
     }
+}
