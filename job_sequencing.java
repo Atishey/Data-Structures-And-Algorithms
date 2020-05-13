@@ -45,3 +45,62 @@ public class Solution {
         return ans;
     }
 }
+
+
+/*
+Better solution using disjoint set algorithm.
+Just keep parent of a given deadline to the latest slot available
+*/
+
+public class Solution {
+    int parent[];
+    class Job implements Comparable{
+        int time;
+        int profit;
+        Job(int time,int profit){
+            this.time= time;
+            this.profit = profit;
+        }
+        
+        public int compareTo(Object j){
+            return -Integer.compare(this.profit,((Job)j).profit);
+        }
+    } 
+    
+    public int find(int t){
+        int temp = t;
+        while(temp != parent[temp])
+            temp = parent[temp];
+        return temp;    
+    }
+    
+    public void union(int u,int v){
+        parent[u] = v;
+    }
+    
+    public int solve(int[] time, int[] profit) {
+        int n = time.length;
+        int max_time = 0;
+        Job jobs[] = new Job[n];
+        for(int i=0;i<n;i++){
+            max_time = Math.max(time[i],max_time);
+            jobs[i] = new Job(time[i],profit[i]);
+        }
+        parent = new int[max_time+1];
+        Arrays.sort(jobs);
+        for(int i=0;i<=max_time;i++){
+            parent[i] = i;
+        }
+        int ans = 0;
+        for(int i=0;i<n;i++){
+            int slot = find(jobs[i].time);
+            if(slot >= 1){
+                union(slot,slot-1);
+                ans += jobs[i].profit;
+            }    
+        }
+        return ans;
+        
+    }
+}
+
