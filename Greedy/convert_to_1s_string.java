@@ -1,5 +1,5 @@
 /*
-Binary Strings
+Binary Strings - Scaler problem
 Problem Description
 You are given a string A consisting of 1's and 0's. Now the task is to make the string consisting of only 1's. But you are allowed to perform only the following operation:
 Take exactly B consecutive elements of string and change 1 to 0 and 0 to 1.
