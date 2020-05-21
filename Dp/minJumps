@@ -1,0 +1,36 @@
+//https://www.geeksforgeeks.org/minimum-number-of-jumps-to-reach-end-of-a-given-array/
+
+public static int dp[],ans[],a[],n;
+    
+    public static int minJumps(int low){
+        if(low == n-1)
+            return 0;
+        if(a[low] == 0)
+            return Integer.MAX_VALUE;
+        if(dp[low] > 0)
+            return dp[low];
+        int min = Integer.MAX_VALUE;    
+        for(int i=low+1;i<=n-1 && i<=low+a[low];i++) {
+            int jumps = minJumps(i);
+            if(jumps!=Integer.MAX_VALUE && jumps+1 < min)
+                min = jumps+1;
+        }
+        return dp[low] = min;
+    }
+    
+	public static void main (String[] args) throws IOException {
+	   FastReader sc = new FastReader();
+	   int t = sc.nextInt();
+	    while(t>0) {
+	        n = sc.nextInt();
+	        a = new int[n];
+	        for(int i=0;i<n;i++)
+	            a[i] = sc.nextInt();
+	        //Min no. of jumps needed to reach i from 0;     
+	        dp = new int[n];     
+	        int ans = minJumps(0);
+	        ans = ans == Integer.MAX_VALUE ? -1 : ans;
+	        System.out.println(ans);
+	        t--;
+	    }
+	 }
